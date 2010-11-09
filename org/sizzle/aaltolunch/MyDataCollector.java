@@ -14,8 +14,6 @@ import javax.servlet.http.HttpServlet;
  */
 public class MyDataCollector  extends HttpServlet
 {
-	private static final long serialVersionUID = 1L;
-	
 	private final static long ONCE_PER_DAY = 1000*60*60*24;
 	
 	@Override
@@ -54,7 +52,7 @@ public class MyDataCollector  extends HttpServlet
 
 		public void run() 
 		{
-			System.out.println(new Date());
+//			System.out.println(new Date());
 
 			try 
 			{

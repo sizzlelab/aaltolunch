@@ -1,10 +1,12 @@
 package org.sizzle.aaltolunch.asi.datatype;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author Nalin Chaudhary
  */
-public class ASIUserBean 
+public class ASIUserBean implements Comparable, Serializable
 {
 	private ASIUserAddressBean userAddressInfo;
 	private ASIUserNameBean userNameInfo;
@@ -122,5 +124,20 @@ public class ASIUserBean
 
 	public String getEmail() {
 		return email;
+	}
+
+	public int compareTo(Object o) {
+		
+		int ret = 0;
+		
+		if (o != null && ((ASIUserBean)o).getUserNameInfo() != null)
+		{
+			if (getUserNameInfo() != null && getUserNameInfo().getUnstructured() != null)
+			{
+				ret = getUserNameInfo().getUnstructured().compareToIgnoreCase(((ASIUserBean)o).getUserNameInfo().getUnstructured());
+			}
+		}
+		
+		return ret;
 	}
 }	

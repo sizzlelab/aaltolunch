@@ -73,6 +73,29 @@ public class TkkDataProvider
 		SchoolDailyMenu tkkDailyMenu = new SchoolDailyMenu(SchoolName.TKK); 
 		tkkDailyMenu.setRestaurants(m_restaurants);
 		
+		// debugging
+//		if (m_restaurants != null)
+//		{
+//			for (Restaurant r : m_restaurants)
+//			{
+//				System.out.println("------- " + r.getName() + " -------");
+//				
+//				if (r.getMenuList() != null)
+//				{
+//					ArrayList<MenuItem> items = r.getMenuList();
+//					
+//					for (MenuItem m : items)
+//					{
+//						System.out.println("--> " + m.getName());						
+//					}
+//				}
+//				else
+//				{
+//					System.out.println("menu list is null");
+//				}
+//			}
+//		}
+		
 		return tkkDailyMenu;
 	}
 	
@@ -251,15 +274,16 @@ public class TkkDataProvider
 	
 	private ArrayList<MenuItem> parseTeekkariravintolat (String menus)
 	{
+//		System.out.println("parseTeekkariravintolat: menu: " + menus);
 		ArrayList<MenuItem> ret = new ArrayList<MenuItem>();
-		menus = menus.replaceAll("<br>","BR_OPEN").replaceAll("\\<[^>]*>","").trim();
-
+		menus = menus.replaceAll("<br>","~").replaceAll("\\<[^>]*>","").trim();
+//		System.out.println("parseTeekkariravintolat: menu: " + menus);
 		if (menus.length() > 0)
 		{
-			menus = menus + "BR_OPEN" + "---";
+			menus = menus + "~" + "---";
 		}
-//		System.out.println((menus));
-		StringTokenizer st = new StringTokenizer(menus, "BR_OPEN");
+//		System.out.println("parseTeekkariravintolat: menu: " + menus);
+		StringTokenizer st = new StringTokenizer(menus, "~");
 		
 		String menuItem = "";
 		while (st.hasMoreTokens())
@@ -267,8 +291,10 @@ public class TkkDataProvider
 			String token = st.nextToken().trim();
 			if (token.length() > 0)
 			{
-				if (token.equals("---"))
+//				if (token.equals("---"))  commented on 06.11.2010
+				if (token.equals("---") && menuItem.trim().length() > 0)
 				{
+//					System.out.println("parseTeekkariravintolat: menuItem: " + menuItem);
 					ret.add(new MenuItem(menuItem, ""));
 					menuItem = "";
 					
@@ -401,7 +427,8 @@ public class TkkDataProvider
 			String token = st.nextToken().trim();
 			if (token.length() > 0)
 			{
-				if (token.equals("---"))
+//				if (token.equals("---"))  commented on 06.11.2010
+				if (token.equals("---") && menuItem.trim().length() > 0)
 				{
 					ret.add(new MenuItem(menuItem, ""));
 					menuItem = "";

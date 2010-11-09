@@ -12,6 +12,7 @@ import org.sizzle.aaltolunch.asi.datatype.ASIUserAvtarBean;
 import org.sizzle.aaltolunch.asi.datatype.ASIUserBean;
 import org.sizzle.aaltolunch.asi.datatype.ASIUserNameBean;
 import org.sizzle.aaltolunch.asi.datatype.ASIUserStatusBean;
+import org.sizzle.aaltolunch.asi.datatype.PaginationBean;
 
 public class ASIDataParser 
 {
@@ -68,6 +69,33 @@ public class ASIDataParser
 		}
 		
 		return userBean;
+	}
+	
+	public PaginationBean parsePagination (String response) throws ParseException
+	{
+		PaginationBean bean = null;
+		
+		JSONParser jsonParser = new JSONParser();
+		JSONObject jsonObj = (JSONObject)jsonParser.parse(response);
+		
+		if (jsonObj != null)
+		{
+			if (jsonObj.containsKey("pagination"))
+			{
+				JSONObject entryObj = (JSONObject)jsonObj.get("pagination");
+				
+				if (entryObj != null)
+				{
+					String page = entryObj.get("page") != null ? entryObj.get("page").toString() : null;
+					String size = entryObj.get("size") != null ? entryObj.get("size").toString() : null;
+					String perPage = entryObj.get("per_page") != null ? entryObj.get("per_page").toString() : null;
+					
+					bean = new PaginationBean(page, size, perPage);
+				}
+			}
+		}
+		
+		return bean;
 	}
 	
 	private ASIUserBean parse (JSONObject o)

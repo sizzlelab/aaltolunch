@@ -70,6 +70,17 @@ public class TaikDataProvider
 						fetchTodaysMenuForKipsari(kipsariUrl);
 					}
 				}
+				
+				// Meccala
+				if (fetchRestaurantLink("Meccala") != null)
+				{
+					String meccalaUrl = fetchRestaurantLink("Meccala");
+
+					if (meccalaUrl != null && meccalaUrl.trim().length() > 0)
+					{
+						fetchTodaysMenuForMeccala(meccalaUrl);
+					}
+				}
 
 				// Katri-Antell
 				if (fetchRestaurantLink("Katri-Antell") != null)
@@ -90,6 +101,20 @@ public class TaikDataProvider
 					if (koskenrantaUrl != null && koskenrantaUrl.trim().length() > 0)
 					{
 						fetchTodaysMenuForKoskenranta(koskenrantaUrl);
+					}
+				}
+				
+				// remove unicafe from the list (As discussed there are many unicafe so avoiding it)
+				if (m_restaurants != null)
+				{
+					for (Restaurant r : m_restaurants)
+					{
+//						System.out.println("r name : " + r.getName());
+						if (r.getName() != null && r.getName().equalsIgnoreCase("Unicafe"))
+						{
+							m_restaurants.remove(r);
+							break;
+						}
 					}
 				}
 			}
@@ -169,7 +194,7 @@ public class TaikDataProvider
 									
 									String link = rawLine.substring(rawLine.indexOf("a href=") + (new String("a href=")).length() + 1);
 									link = link.substring(0, link.indexOf('"'));
-//										System.out.println("name : " + name + ", link : " + link);
+//									System.out.println("name : " + name + ", link : " + link);
 									
 									if (name != null)
 									{
@@ -281,8 +306,8 @@ public class TaikDataProvider
 			Date date = new Date();
 			SimpleDateFormat format = new SimpleDateFormat("E");
 			String dayOfWeek = format.format(date); 
-//			dayOfWeek = "Wed";	// TODO : reomove it - testing only
-//			System.out.println(dayOfWeek);
+//			dayOfWeek = "Fri";	// TODO : reomove it - testing only
+//			System.out.println("===================== " + dayOfWeek);
 
 			if (response.contains("Viikko "))
 			{
@@ -301,16 +326,16 @@ public class TaikDataProvider
 //							rawMenu = rawMenu.replaceAll("\n", "");
 							rawMenu = rawMenu.replaceAll("<br><strong>", "BR_STRONG");
 //							System.out.println("rawMenu : " + rawMenu);
-//							System.out.println("rawMenu : " + rawMenu);
 //							System.out.println(dayOfWeek);
 //							System.out.println(getDayTagForKipsari(dayOfWeek));
-							if (getDayTagForKipsari(dayOfWeek) !=null && rawMenu.contains(getDayTagForKipsari(dayOfWeek)))
+							if (getDayTagForKipsari(dayOfWeek) != null && rawMenu.contains(getDayTagForKipsari(dayOfWeek)))
 							{
 								rawMenu = rawMenu.substring(rawMenu.indexOf(getDayTagForKipsari(dayOfWeek)));
 //								System.out.println("rawMenu : " + rawMenu);
-//								if (rawMenu.contains("BR_STRONG"))
-//								{
-//									rawMenu = rawMenu.substring(0, rawMenu.indexOf("BR_STRONG"));
+								if (rawMenu.contains("BR_STRONG"))
+								{
+									rawMenu = rawMenu.substring(0, rawMenu.indexOf("BR_STRONG"));
+//									System.out.println("rawMenu 2 : " + rawMenu);
 									if (rawMenu.indexOf("strong>") > 0)
 									{
 										String name = rawMenu.substring(rawMenu.indexOf("strong>") +  (new String("strong>")).length()).trim();
@@ -323,7 +348,21 @@ public class TaikDataProvider
 										
 										setRestaurantMenuItemList ("Kipsari", list);
 									}
-//								}
+								}else if (rawMenu.contains("Fri"))
+								{
+									if (rawMenu.indexOf("strong>") > 0)
+									{
+										String name = rawMenu.substring(rawMenu.indexOf("strong>") +  (new String("strong>")).length()).trim();
+//										System.out.println("name : " + name);
+										String type = "";			// Kipsari doesn't show type of menu
+										
+										MenuItem item = new MenuItem(name, type);
+										ArrayList<MenuItem> list = new ArrayList<MenuItem>();
+										list.add(item);
+										
+										setRestaurantMenuItemList ("Kipsari", list);
+									}
+								}
 							}
 						}
 					}
@@ -360,6 +399,138 @@ public class TaikDataProvider
 		return ret;
 	}
 
+	/* ======================================== Meccala ============================================== */
+	
+	private void fetchTodaysMenuForMeccala(String link)
+	{
+		String rawHost = link.substring(link.indexOf("://") + (new String("://")).length());
+		String host = rawHost.substring(0, rawHost.indexOf("/"));
+		String page = rawHost.substring(rawHost.indexOf("/"));
+		
+//		System.out.println("host: " + host);
+//		System.out.println("page: " + page);
+		
+		// Host configuration
+		m_httpClient.getHostConfiguration().setHost(host, (new Integer(HTTP_PORT)).intValue(), HTTP_PROTOCOL_STRING);
+
+		// Create a GET request for restaurant
+		GetMethod mainPageGet = new GetMethod(page); 
+
+		try 
+		{
+			// Send GET request
+			m_httpClient.executeMethod(mainPageGet);
+		
+//			System.out.println("Got MAIN page. Time(ms) : "	+ (System.currentTimeMillis() - t1));
+			
+			String responseMainPage = mainPageGet.getResponseBodyAsString();
+			
+//			System.out.println(responseMainPage);
+			
+			dirtyParseForMeccala(responseMainPage);
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+
+		// Release connection
+		mainPageGet.releaseConnection();
+	}
+	
+	private void dirtyParseForMeccala(String response)
+	{
+		if (response != null)
+		{
+			// Current week number
+//			Calendar now = Calendar.getInstance();
+//			int weekNumber = now.get(Calendar.WEEK_OF_YEAR);
+			
+			/* Nalin Chaudhary
+			 * Java is returning different week number than that is on the site.
+			 * So, no check on the week number.
+			 */
+			Date date = new Date();
+			SimpleDateFormat format = new SimpleDateFormat("E");
+			String dayOfWeek = format.format(date); 
+//			System.out.println(dayOfWeek);
+//			dayOfWeek = "Fri";								// TODO : reomove it - testing only
+			String dayTag = getDayTagForMeccala(dayOfWeek);
+//			System.out.println("======================================= " + dayTag);
+
+			if (response.contains("<tbody>"))
+			{
+				String rawMenu = response.substring(response.indexOf("<tbody>"), response.indexOf("</tbody>"));
+//				System.out.println(rawMenu);
+				
+				if (rawMenu.contains("<p><strong>" + dayTag))
+				{
+					rawMenu = rawMenu.substring(rawMenu.indexOf("<p><strong>" + dayTag) + (new String("<p><strong>" + dayTag)).length());
+//					System.out.println(rawMenu);
+					
+					if (rawMenu.contains("<p><strong>"))
+					{
+						rawMenu = rawMenu.substring(0, rawMenu.indexOf("<p><strong>"));
+					}
+					
+//					System.out.println(rawMenu.replaceAll("\\<[^>]*>","").trim());
+//					System.out.println(rawMenu);
+					
+					StringTokenizer st = new StringTokenizer(rawMenu, "\n");
+					ArrayList<MenuItem> list = new ArrayList<MenuItem>();
+					String type = "";
+					while (st.hasMoreTokens())
+					{
+						String rawLine = st.nextToken();
+//						System.out.println("--> " + rawLine);
+						if (rawLine.contains("<p>") && !rawLine.contains("<p>&nbsp;</p>"))
+						{
+							String name = rawLine.replaceAll("\\<[^>]*>","").trim();
+							if (name.contains("&auml;"))
+							{
+								name = name.replaceAll("&auml;", "ä");
+							}
+//							System.out.println("--> " + name);
+							
+							MenuItem item = new MenuItem(name, type);
+							list.add(item);
+						}
+					}
+					
+					setRestaurantMenuItemList ("Meccala", list);
+				}
+			}
+		}
+	}
+	
+	private String getDayTagForMeccala(String dayOfWeek)
+	{
+		String ret = null;
+		
+		if (dayOfWeek.equals("Mon") || dayOfWeek.equals("ma"))
+		{
+			ret = "Maanantai";
+		}
+		else if (dayOfWeek.equals("Tue") || dayOfWeek.equals("ti"))
+		{
+			ret = "Tiistai";
+		}
+		else if (dayOfWeek.equals("Wed") || dayOfWeek.equals("ke"))
+		{
+			ret = "Keskiviikko";
+		}
+		else if (dayOfWeek.equals("Thu") || dayOfWeek.equals("to"))
+		{
+			ret = "Torstai";
+		}
+		else if (dayOfWeek.equals("Fri") || dayOfWeek.equals("pe"))
+		{
+			ret = "Perjantai";
+		}
+		
+		return ret;
+	}
+	
 	/* ======================================== Katri-Antell ============================================== */
 	
 	private void fetchTodaysMenuForKatriAntell(String link)
@@ -437,7 +608,7 @@ public class TaikDataProvider
 		SimpleDateFormat format = new SimpleDateFormat("E");
 		String dayOfWeek = format.format(date); 
 //		System.out.println(dayOfWeek);
-//		dayOfWeek = "Mon";	// TODO : reomove it - testing only
+//		dayOfWeek = "Fri";	// TODO : reomove it - testing only
 		String dayTag = getDayTagForKatriAntell(dayOfWeek);
 //		System.out.println("======================================= " + dayTag);
 		
@@ -481,7 +652,13 @@ public class TaikDataProvider
 										name = rawName.substring(0, rawName.indexOf(" ("));
 										type = rawName.substring(rawName.indexOf(" (")).trim();
 									}
+									else
+									{
+										name = rawName;
+									}
 
+//									System.out.println("Name : " + name  + ", type: " + type);
+									
 									MenuItem item = new MenuItem(name, type);
 									list.add(item);
 								}

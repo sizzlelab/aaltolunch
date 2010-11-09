@@ -12,32 +12,25 @@ import org.sizzle.aaltolunch.asi.RestHandler;
 import org.sizzle.aaltolunch.asi.datatype.ASISessionBean;
 
 /**
+ * 
  * @author Nalin Chaudhary
  */
-public class AccessServlet extends HttpServlet 
+public class NewUserServlet extends HttpServlet 
 {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException
     {
 		HttpSession session = request.getSession(true);
 		
-		if (session.getAttribute("loginResult") != null)
-		{
-			session.removeAttribute("loginResult");
-		}
-		
 		RestHandler handler = new RestHandler();
-		ASISessionBean sBean = handler.loginAsUser(request);
+		ASISessionBean sBean = handler.createNewUser(request);
 
 		if (sBean != null)
 		{
 			String uid = sBean.getUserId();
 			String appId = sBean.getAppId();
 			
-			// TODO required to remove on logout form AaltoLunch
 			session.setAttribute("uid", uid);
-			session.setAttribute("uName", request.getParameter("t1"));
-			session.setAttribute("uPassword", request.getParameter("t2"));
 			session.setAttribute("appId", appId);
 			
 			getServletContext().getRequestDispatcher("/mainPage.jsp").forward(request, response);
