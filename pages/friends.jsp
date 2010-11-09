@@ -1,6 +1,6 @@
 <%@ page language="java" 
     contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"
+    pageEncoding="ISO-8859-1"
     
     import="org.sizzle.aaltolunch.asi.RestHandler,org.sizzle.aaltolunch.asi.datatype.ASIUserBean,org.sizzle.aaltolunch.datatype.FriendSelection,java.util.List,org.sizzle.aaltolunch.UserSelectionHandler,java.util.Properties,java.util.ArrayList,java.util.Collections"
 %>
@@ -11,7 +11,7 @@
 <HTML>
 	<HEAD>
     	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"; encoding="ISO-8859-1">
-		<title>Aalto Lunch - main page</title>
+		<title>Aalto Lunch - all friends page</title>
 		
 		<script type="text/javascript">
 		
@@ -37,7 +37,7 @@
 		
 		<TABLE width="270" align="center">
 			<tr>
-				<td width="90" align="left"><A HREF="settings.jsp?fromMain=yes">settings</A></td>
+				<td width="90"><A HREF="javascript:javascript:history.go(-1)">back</A></td>
 				<td width="90"></td>
 		<!-- 	<td width="90" align="right"><A HREF="index.jsp">logout</A></td> 	Commented on 06.11.2010-->
 				<td width="90" align="right"><A HREF="/aaltolunch/logout">logout</A></td>
@@ -113,9 +113,9 @@
 -->
 			<tr>
 				<td width="90"><img src="<%= avtarLink %>" /></td>
-		<!--	<td width="180" style="font-family:Arial;font-size:11pt;font-weight:bold;color:#153E7E" VALIGN="top" ALIGN="right"><%= name + System.getProperty("line.separator") + "@" + uPlaceToEat + " at " + uTimeToEat %></td> -->
-		<!--	<td width="180" style="font-family:Arial;color:#153E7E" VALIGN="top" ALIGN="right"><font size="4"><b><%= name %></b></font><br><font size="2.5"><%= uSubHeader %></font></td>  				-->
-		
+			<!-- <td width="180" style="font-family:Arial;font-size:11pt;font-weight:bold;color:#153E7E" VALIGN="top" ALIGN="right"><%= name + System.getProperty("line.separator") + "@" + uPlaceToEat + " at " + uTimeToEat %></td> -->
+			<!-- <td width="180" style="font-family:Arial;color:#153E7E" VALIGN="top" ALIGN="right"><font size="4"><b><%= name %></b></font><br><font size="2.5"><%= uSubHeader %></font></td>	-->
+			
 				<td width="180" style="font-family:Arial;color:#153E7E" VALIGN="top" ALIGN="right"><font size="4"><b><%= name %></b></font><br><font size="2.5"><%= uSubHeader %></font>
 				
 				<% if (uSubHeader.length() > 0)
@@ -136,7 +136,8 @@
 				<%
 				   } 
 				%>
-				</td>					
+				</td>
+					
 			
 			
 		<!--	<td style="font-family:Arial;font-size:11pt;color:#2E2E2E">Welcome </td>
@@ -200,14 +201,14 @@
 %>			
 			<BR>
 			<DIV align="center">	
-				<A STYLE="font-family:Arial;font-size:11pt;font-weight:bold;color:#153E7E">Your friends have chosen...</A>
+				<A STYLE="font-family:Arial;font-size:11pt;font-weight:bold;color:#153E7E">Complete list of friends' selections</A>
 				<BR>
 				<A STYLE="font-family:Arial;font-size:10pt;color:#153E7E">(Click 'join' for joining your friend)</A>
 			</DIV>
 			<TABLE align="center" width="270" border=0><tbody>
 <%	
 			int numberToShow = (friendsHavingLunch.size() > 2) ? 2 : friendsHavingLunch.size(); 
-			for (int i = 0; i < numberToShow; i++)
+			for (int i = 0; i < friendsHavingLunch.size(); i++)
 			{
 				FriendSelection f = friendsHavingLunch.get(i);
 				String tte = f.getTimeToEat();
@@ -226,18 +227,6 @@
 				</tr>
 <%
 			}	// closing for for loop
-			
-			int num = friendsHavingLunch.size();
-			if (friendsHavingLunch.size() > 2)
-			{
-%>				
-				<TABLE align="center">
-					<tr>
-						<td align="center"><A HREF="friends.jsp">see complete list [<%= num %>]</A></td>
-					</tr>
-				</TABLE>
-<%				
-			}
 %>
 			</tbody></TABLE>
 <%			
@@ -252,26 +241,6 @@
 		}
 	}	// closing of (uid != null)
 %>
-		<BR>
-		<DIV align="center">	
-			<A STYLE="font-family:Arial;font-size:11pt;font-weight:bold;color:#153E7E">Choose campus for lunch</A>
-		</DIV>
-
-		<FORM name="campus" action="campus.jsp">
-			<TABLE align="center" border=0>
-				<tr>
-					<td><input type="submit" name="c" value="TKK" style="background-color:#43C6DB;color:#ffffff;height:32px;width:270px"></td>
-				</tr>
-				<tr>
-					<td><input type="submit" name="c" value="HSE" style="background-color:#FBB917;color:#ffffff;height:32px;width:270px"></td>
-				</tr>
-				<tr>
-					<td><input type="submit" name="c" value="TaiK" style="background-color:#C12267;color:#ffffff;height:32px;width:270px"></td>
-				</tr>
-			</TABLE>		
-		</FORM>
-
-		<BR>
 		<HR width="100%" color="#0070C0" size="1" />	
 	</BODY>
 </HTML>
