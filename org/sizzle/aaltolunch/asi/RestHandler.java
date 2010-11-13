@@ -1,14 +1,17 @@
 package org.sizzle.aaltolunch.asi;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.sizzle.aaltolunch.asi.datatype.ASISearchedUserBean;
 import org.sizzle.aaltolunch.asi.datatype.ASISessionBean;
 import org.sizzle.aaltolunch.asi.datatype.ASIUserBean;
 import org.sizzle.aaltolunch.asi.datatype.PaginationBean;
+import org.sizzle.aaltolunch.asi.datatype.ASISearchedUserBean.FriendshipStatus;
 import org.sizzle.aaltolunch.utils.SearchResult;
 
 import com.sun.jersey.api.client.WebResource;
@@ -177,6 +180,12 @@ public class RestHandler
 			// Login as application			
 			ASISessionBean asBean = loginAsApplication();
 			
+			// Searching the friends of the logged-in user
+			List<ASIUserBean> friends = fetchUserFriends(uid);
+			
+			// Searing the users for the searched string
+			List<ASIUserBean> searchedUsers = null;
+			PaginationBean pbean = null;
 			if (asBean != null)
 			{
 				WebResource webResource = m_client.resource(ASI_URI + "people?search=" + searchString + "&per_page=20&page=" + page);
@@ -185,12 +194,52 @@ public class RestHandler
 				System.out.println(response);
 				
 				ASIDataParser aSIDataParser = new ASIDataParser();
-				List<ASIUserBean> users = aSIDataParser.parseUsers(response);
+				searchedUsers = aSIDataParser.parseUsers(response);
 				
-				PaginationBean pbean = aSIDataParser.parsePagination(response);
-				
-				result = new SearchResult(users, pbean);
+				pbean = aSIDataParser.parsePagination(response);
 			}
+			
+			List<ASISearchedUserBean> searchedUsersWithInfo = new ArrayList<ASISearchedUserBean>();
+			
+			// Update the friendship information
+			if (searchedUsers != null)
+			{
+				for (ASIUserBean su : searchedUsers)
+				{
+					ASISearchedUserBean searchedUserWithInfo = null;
+					FriendshipStatus status = null;
+					
+					if (su.getId().equals(uid))
+					{
+						status = FriendshipStatus.MYSELF;
+					}
+					
+					boolean isFriend = false;
+					for (ASIUserBean f : friends)
+					{
+						if (f.getId().equals(su.getId()))
+						{
+							isFriend = true;
+							break;
+						}
+					}
+					
+					if (isFriend)
+					{
+						status = FriendshipStatus.FRIEND;
+					}
+					else
+					{
+						status = FriendshipStatus.NOT_A_FRIEND;
+					}
+					
+					searchedUserWithInfo = new ASISearchedUserBean(su, status);
+					searchedUsersWithInfo.add(searchedUserWithInfo);
+				}
+			}
+			
+			// Create the response object
+			result = new SearchResult(searchedUsers, pbean);
 		} 
 		catch (Exception e) 
 		{
