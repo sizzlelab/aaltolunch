@@ -164,6 +164,7 @@ public class RestHandler
 	public SearchResult searchUsers(HttpServletRequest httpRequest)
 	{
 		SearchResult result = null;
+		List<ASISearchedUserBean> searchedUsersWithInfo = null;
 		
 		try 
 		{
@@ -183,7 +184,7 @@ public class RestHandler
 			// Searching the friends of the logged-in user
 			List<ASIUserBean> friends = fetchUserFriends(uid);
 			
-			// Searing the users for the searched string
+			// Searching the users for the searched string
 			List<ASIUserBean> searchedUsers = null;
 			PaginationBean pbean = null;
 			if (asBean != null)
@@ -199,18 +200,20 @@ public class RestHandler
 				pbean = aSIDataParser.parsePagination(response);
 			}
 			
-			List<ASISearchedUserBean> searchedUsersWithInfo = new ArrayList<ASISearchedUserBean>();
-			
 			// Update the friendship information
 			if (searchedUsers != null)
 			{
+				searchedUsersWithInfo = new ArrayList<ASISearchedUserBean>();
 				for (ASIUserBean su : searchedUsers)
 				{
 					ASISearchedUserBean searchedUserWithInfo = null;
 					FriendshipStatus status = null;
 					
+					System.out.println("RestHandler: su.getId(): " + su.getId() + ", uid: " + uid);
+					
 					if (su.getId().equals(uid))
 					{
+						System.out.println("RestHandler: uid matched");
 						status = FriendshipStatus.MYSELF;
 					}
 					
@@ -224,13 +227,16 @@ public class RestHandler
 						}
 					}
 					
-					if (isFriend)
+					if (!su.getId().equals(uid))
 					{
-						status = FriendshipStatus.FRIEND;
-					}
-					else
-					{
-						status = FriendshipStatus.NOT_A_FRIEND;
+						if (isFriend)
+						{
+							status = FriendshipStatus.FRIEND;
+						}
+						else
+						{
+							status = FriendshipStatus.NOT_A_FRIEND;
+						}
 					}
 					
 					searchedUserWithInfo = new ASISearchedUserBean(su, status);
@@ -239,7 +245,8 @@ public class RestHandler
 			}
 			
 			// Create the response object
-			result = new SearchResult(searchedUsers, pbean);
+//			result = new SearchResult(searchedUsers, pbean);
+			result = new SearchResult(searchedUsersWithInfo, pbean);
 		} 
 		catch (Exception e) 
 		{

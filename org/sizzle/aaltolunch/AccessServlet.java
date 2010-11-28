@@ -34,6 +34,9 @@ public class AccessServlet extends HttpServlet
 			String uid = sBean.getUserId();
 			String appId = sBean.getAppId();
 			
+			// remove the session attributes (in case those are still existing)
+			session.removeAttribute("uid");
+			
 			// TODO required to remove on logout form AaltoLunch
 			session.setAttribute("uid", uid);
 			session.setAttribute("uName", request.getParameter("t1"));

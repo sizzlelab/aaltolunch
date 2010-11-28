@@ -22,6 +22,7 @@ public class SearchUsersServlet extends HttpServlet
     {
 		HttpSession session = request.getSession(true);
 		String searchString = request.getParameter("t1");
+		System.out.println("SearchUsersServlet: searchString: " + searchString);
 		RestHandler handler = new RestHandler();
 		SearchResult result = handler.searchUsers(request);
 		

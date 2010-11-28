@@ -11,7 +11,8 @@ import="java.lang.Integer,java.util.List,java.util.ArrayList,org.sizzle.aaltolun
 <HTML>
 	<HEAD>
     	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Aalto Lunch - pending friendship requests</title>
+		<title>AaltoLunch - pending friendship requests</title>
+		<link type="text/css" rel="stylesheet" href="aaltolunch.css" />
 		<script type="text/javascript">
 		
 		  var _gaq = _gaq || [];
@@ -28,39 +29,15 @@ import="java.lang.Integer,java.util.List,java.util.ArrayList,org.sizzle.aaltolun
 		
 	</HEAD>
 
-	<BODY bgcolor="white">
-	
-	<H1 align="center"><img src="./images/aalto-lunch-logo-2.png" alt="http://www.aalto.fi"></H1>
-	<!-- <H1 align="center"><img src="./images/aalto-logo-very-small.png" alt="http://www.aalto.fi"><img src="./images/aalto-lunch-logo-blue-small.png" alt="http://www.aalto.fi"></H1> -->
-	<!-- <img src="./images/aalto-logo-stripped.png" alt="http://www.aalto.fi" align="middle" /> -->
-	<!-- <img src="./images/aalto-lunch.png" repeat-x; width: 100%; /> -->
-
-	<TABLE width="270" align="center" border="0">
-		<tr>
-			<!-- <td width="90"><A HREF="javascript:javascript:history.go(-1)">back</A></td>  -->
-			<td width="70" align="left"><A HREF="settings.jsp">back</A></td>
-			<td width="130" align="center"></td>
-		<!-- 	<td width="70" align="right"><A HREF="index.jsp">logout</A></td> 	Commented on 06.11.2010-->
-				<td width="70" align="right"><A HREF="/aaltolunch/logout">logout</A></td>
-		</tr>
-	</TABLE>
-		
-	<HR width="100%" color="#0070C0" size="1" />
-
-	<!-- <H2 align="center" STYLE="font-family:Arial;font-size:10pt;color:#2E2E2E">Search your friend</H2> -->
-			
-		<TABLE align="center" border="0">
-			<tr style="background: none repeat scroll 0% 0% rgb(255, 255, 255);">
-				<td align="center" STYLE="font-family:Arial;font-size:11pt;font-weight:bold;color:#153E7E">Pending friendship requests</td>
-								   
-			</tr>
-<!--
-			<tr style="background: none repeat scroll 0% 0% rgb(255, 255, 255);">
-				<td align="center" style="font-family:Arial;font-size:10pt">Fields with asterisk(*) are mandatory.</td>
-			</tr>
--->
-		</TABLE>
-		
+	<BODY>
+	<div id="aaltolunch">
+	<div id="content">
+	<div id="header">
+		<a class="search" href="settings.jsp">Back</a>
+		<a class="logout" href="/aaltolunch/logout">Logout</a>
+	</div>
+	<div id="logo"><a href="mainPage.jsp" title="Main page"><img src="images/logo3.png"></a></div>
+	<h3 class="intro">Pending friendship requests</h3>
 <%
 		int PAGE_SIZE = 10;
 		int index = 0;
@@ -176,7 +153,7 @@ import="java.lang.Integer,java.util.List,java.util.ArrayList,org.sizzle.aaltolun
 				if (userName != null && userName.length() != 0)
 				{
 %>				
-				<tr style="background: none repeat scroll 0% 0% #e8f0fa;">
+				<tr style="background: none repeat scroll 0% 0% white;">
 					<td width="50"><img src="<%= ASI_URI + "people/" + user.getId() + "/@avatar/small_thumbnail/" %>" /></td>
 					<td width="150" VALIGN="top" style="font-family:Arial;font-size:10pt;color:#2E2E2E"><%= userName %></td>
 					<td width="70" VALIGN="top" style="font-family:Arial;font-size:10pt;color:#2E2E2E" align="center"> 
@@ -223,13 +200,24 @@ import="java.lang.Integer,java.util.List,java.util.ArrayList,org.sizzle.aaltolun
 %>
 				<BR>
 				<DIV align="center">	
-					<A STYLE="font-family:Arial;font-size:11pt;color:#153E7E;">No friendship request.</A>
+					<A STYLE="font-family:Arial;font-size:10pt;color:#153E7E;">No friendship request.</A>
 				</DIV>
 <%
 		}
 %>		
 		</tbody></TABLE>
-
-		<HR width="100%" color="#0070C0" size="1" />	
+         <div id="footer">
+        	<ul class="footer-nav">
+                <li>&copy; AaltoLunch 2010<li>
+                <li>|</li>
+                <li><a class="footer-links" href="about.html">About us</a></li>
+                <li>|</li>
+                <li><a class="footer-links" href="contact.html">Contact</a></li>
+                <!--<li><a class="footer-links" href="www.shobbie.com/terms">Terms</a></li>-->
+       		</ul>
+        </div>
+        
+    </div>
+    </div>
 	</BODY>
 </HTML>

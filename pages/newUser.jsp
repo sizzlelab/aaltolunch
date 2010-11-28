@@ -9,8 +9,8 @@
 <HTML>
 	<HEAD>
     	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Aalto Lunch - create new user account</title>
-		
+		<title>AaltoLunch - Sign up</title>
+        <link type="text/css" rel="stylesheet" href="aaltolunch.css" />
 		<script type="text/javascript">
 		
 		  var _gaq = _gaq || [];
@@ -24,12 +24,13 @@
 		  })();
 		
 		</script>
-		
 	</HEAD>
 
-	<BODY bgcolor="white">
-	
-	<script language="JavaScript">
+	<BODY>
+    
+		<div id="aaltolunch">
+		<div id="content">
+		<script language="JavaScript">
 		function checkForm() 
 		{
 			var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
@@ -59,65 +60,62 @@
 		  		document.getElementById("email").innerHTML='&nbsp;<span class="error">Email address is not valid.</span>'
 		  		return false;		  	
 		  	}
-		  	
 		  	return true;
 		}
 	</script>
 	
-	<H1 align="center"><img src="./images/aalto-lunch-logo-2.png" alt="http://www.aalto.fi"></H1>
-	<!-- <H1 align="center"><img src="./images/aalto-logo-very-small.png" alt="http://www.aalto.fi"><img src="./images/aalto-lunch-logo-blue-small.png" alt="http://www.aalto.fi"></H1> -->
-	<!-- <img src="./images/aalto-logo-stripped.png" alt="http://www.aalto.fi" align="middle" /> -->
-	<!-- <img src="./images/aalto-lunch.png" repeat-x; width: 100%; /> -->
-	<BR>
+	<div id="header">
+            <a class="logout" href="index.jsp">Login</a>
+            <a class="search" href="index.jsp">Back</a>
+	</div>
+	<div id="logo"><a href="index.jsp" title="Main page"><img src="images/logo3.png"></a></div>
+	<h3 class="intro">Sign up for AaltoLunch!</h3>
 
-	<!-- <H2 align="center" STYLE="font-family:Arial;font-size:10pt;color:#2E2E2E">Create new account for AaltoLunch service</H2> -->
-			
-		<TABLE align="center" border="0">
-			<tr style="background: none repeat scroll 0% 0% rgb(255, 255, 255);">
-				<td align="left" style="font-family:Arial;font-size:10pt;font-weight:bold">Create new account for AaltoLunch service</td>
-			</tr>
-			<tr style="background: none repeat scroll 0% 0% rgb(255, 255, 255);">
-				<td align="center" style="font-family:Arial;font-size:10pt">Fields with asterisk(*) are mandatory.</td>
-			</tr>
-		</TABLE>
-		
 		<FORM onsubmit="return checkForm(this);" name="newuser" action="newuser" method="post">
-		
-			<table width="315" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
+
+		<TABLE align="center" border="0">
+			 	<tr><td align="center" style="font-family:Verdana, Geneva, Arial, sans-serif;font-size:12px;color:#F00"><span id="name"><span id="password1"><span id="password2"></span><span id="email"></span></td></tr>
 			 	<tr><td>&nbsp;</td></tr>
-			 	<tr><td align="center" style="font-family:Arial;font-size:10pt;color:#FF0080"><span id="name"><span id="password1"><span id="password2"></span><span id="email"></span></td></tr>
-			 </table>
-		
-			<TABLE align="center" border="0">
-				<tr><td  style="font-family:Arial;font-size:10pt;color:#2E2E2E">User name*</td></tr>
-				<tr><td><input type="text" style="color:#00B0F0;font-family:Arial;font-weight:bold;font-size:12px;background-color:#EFF5FB;" size="40" maxlength="20" name="t1" id="t1" ></td></tr>
+			 	
+				<tr><td  style="font-family:Verdana, Geneva, Arial, sans-serif;font-size:12px;color:#2E2E2E">Username:*</td></tr>
+				<tr><td><input type="text" class="input-field" size="40" maxlength="20" name="t1" id="t1" ></td></tr>
 				
-				<tr><td  style="font-family:Arial;font-size:10pt;color:#2E2E2E">First name</td></tr>
-				<tr><td><input type="text" style="color:#00B0F0;font-family:Arial;font-weight:bold;font-size:12px;background-color:#EFF5FB;" size="40" maxlength="100" name="t2" id="t2" ></td></tr>
+				<tr><td  style="font-family:Verdana, Geneva, Arial, sans-serif;font-size:12px;color:#2E2E2E">First name:</td></tr>
+				<tr><td><input type="text" class="input-field" size="40" maxlength="100" name="t2" id="t2" ></td></tr>
 				
-				<tr><td  style="font-family:Arial;font-size:10pt;color:#2E2E2E">Last name</td></tr>
-				<tr><td><input type="text" style="color:#00B0F0;font-family:Arial;font-weight:bold;font-size:12px;background-color:#EFF5FB;" size="40" maxlength="100" name="t3" id="t3" ></td></tr>
+				<tr><td  style="font-family:Verdana, Geneva, Arial, sans-serif;font-size:12px;color:#2E2E2E">Last name:</td></tr>
+				<tr><td><input type="text" class="input-field" size="40" maxlength="100" name="t3" id="t3" ></td></tr>
 				
-				<tr><td  style="font-family:Arial;font-size:10pt;color:#2E2E2E">password*</td></tr>
-				<tr><td><input type="password" style="color:#00B0F0;font-family:Arial;font-weight:bold;font-size:12px;background-color:#EFF5FB;" size="40" maxlength="15" name="t4" id="t4" ></td></tr>
+				<tr><td  style="font-family:Verdana, Geneva, Arial, sans-serif;font-size:12px;color:#2E2E2E">Password:*</td></tr>
+				<tr><td><input type="password" class="input-field" size="40" maxlength="15" name="t4" id="t4" ></td></tr>
 				
-				<tr><td  style="font-family:Arial;font-size:10pt;color:#2E2E2E">Re-enter password*</td></tr>
-				<tr><td><input type="password" style="color:#00B0F0;font-family:Arial;font-weight:bold;font-size:12px;background-color:#EFF5FB;" size="40" maxlength="15" name="t5" id="t5" ></td></tr>
+				<tr><td  style="font-family:Verdana, Geneva, Arial, sans-serif;font-size:12px;color:#2E2E2E">Re-enter password:*</td></tr>
+				<tr><td><input type="password" class="input-field"" size="40" maxlength="15" name="t5" id="t5" ></td></tr>
 
-				<tr><td  style="font-family:Arial;font-size:10pt;color:#2E2E2E">Email*</td></tr>
-				<tr><td><input type="text" style="color:#00B0F0;font-family:Arial;font-weight:bold;font-size:12px;background-color:#EFF5FB;" size="40" maxlength="100" name="t6" id="t6" ></td></tr>
+				<tr><td  style="font-family:Verdana, Geneva, Arial, sans-serif;font-size:12px;color:#2E2E2E">Email address:*</td></tr>
+				<tr><td><input type="text" class="input-field" size="40" maxlength="100" name="t6" id="t6" ></td></tr>
 
-				<tr><td style="font-family:Arial;font-size:10pt;color:#2E2E2E"><input type="checkbox" name="consent" value="yes"> I accept the Research consent</td></tr>
+				<tr><td style="font-family:Verdana, Geneva, Arial, sans-serif;font-size:12px;color:#2E2E2E"><input type="checkbox" name="consent" value="yes"> I accept <a class="signup-links" href="consent.html">Consent for Research</a></td></tr>
 				<tr><td></td></tr>
 
 				<tr>
-					<td><input type="submit" name="b1" value="sign up"></td>
+					<td><br><input type="submit" class="login-button" name="b1" value="Sign up"></td>
 				</tr>
 			</TABLE>		
 		</FORM>
 		
-		<BR>
+        <div id="footer">
+        	<ul class="footer-nav">
+                <li>&copy; AaltoLunch 2010<li>
+                <li>|</li>
+                <li><a class="footer-links" href="about.html">About us</a></li>
+                <li>|</li>
+                <li><a class="footer-links" href="contact.html">Contact</a></li>
+                <!--<li><a class="footer-links" href="www.shobbie.com/terms">Terms</a></li>-->
+       		</ul>
+        </div>
+	</div>
+    </div>	
 
-		<HR width="100%" color="#0070C0" size="1" />	
 	</BODY>
 </HTML>

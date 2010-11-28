@@ -2,17 +2,19 @@
     contentType="text/html; charset=UTF-8"
     pageEncoding="ISO-8859-1"
     
-import="java.lang.Integer,java.util.List,java.util.ArrayList,org.sizzle.aaltolunch.asi.datatype.ASIUserBean"
+import="java.lang.Integer,java.util.List,java.util.ArrayList,org.sizzle.aaltolunch.asi.datatype.ASISearchedUserBean,org.sizzle.aaltolunch.asi.datatype.ASIUserBean,org.sizzle.aaltolunch.asi.datatype.ASISearchedUserBean.FriendshipStatus"
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 
+
+<%@page import="org.sizzle.aaltolunch.asi.datatype.ASISearchedUserBean.FriendshipStatus"%>
 <HTML>
 	<HEAD>
     	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Aalto Lunch - search users</title>
-		
+		<title>AaltoLunch - Search</title>
+		<link type="text/css" rel="stylesheet" href="aaltolunch.css" />
 		<script type="text/javascript">
 		
 		  var _gaq = _gaq || [];
@@ -29,45 +31,17 @@ import="java.lang.Integer,java.util.List,java.util.ArrayList,org.sizzle.aaltolun
 		
 	</HEAD>
 
-	<BODY bgcolor="white">
-	
-	<H1 align="center"><img src="./images/aalto-lunch-logo-2.png" alt="http://www.aalto.fi"></H1>
-	<!-- <H1 align="center"><img src="./images/aalto-logo-very-small.png" alt="http://www.aalto.fi"><img src="./images/aalto-lunch-logo-blue-small.png" alt="http://www.aalto.fi"></H1> -->
-	<!-- <img src="./images/aalto-logo-stripped.png" alt="http://www.aalto.fi" align="middle" /> -->
-	<!-- <img src="./images/aalto-lunch.png" repeat-x; width: 100%; /> -->
-
-<!-- <TABLE width="270" align="center" border="0">
-		<tr align=right STYLE="font-family:Arial;font-size:8pt;color:#153E7E"><td>
-			<%= (String)session.getAttribute("uName") %> 
-		</td></tr>
-	</TABLE>		-->
-
-	<TABLE width="270" align="center" border="0">
-		<tr>
-			<!-- <td width="90"><A HREF="javascript:javascript:history.go(-1)">back</A></td>  -->
-			<td width="70" align="left"><A HREF="mainPage.jsp">back</A></td>
-			<td width="130" align="center"><A HREF="/aaltolunch/pendingRequests">pending requests</A></td>
-		<!-- 	<td width="70" align="right"><A HREF="index.jsp">logout</A></td> 	Commented on 06.11.2010-->
-				<td width="70" align="right"><A HREF="/aaltolunch/logout">logout</A></td>
-		</tr>
-	</TABLE>
-		
-	<HR width="100%" color="#0070C0" size="1" />
-
-	<!-- <H2 align="center" STYLE="font-family:Arial;font-size:10pt;color:#2E2E2E">Search your friend</H2> -->
-			
-		<TABLE align="center" border="0">
-			<tr style="background: none repeat scroll 0% 0% rgb(255, 255, 255);">
-				<td align="center" STYLE="font-family:Arial;font-size:11pt;font-weight:bold;color:#153E7E">Search users</td>
-								   
-			</tr>
-<!--
-			<tr style="background: none repeat scroll 0% 0% rgb(255, 255, 255);">
-				<td align="center" style="font-family:Arial;font-size:10pt">Fields with asterisk(*) are mandatory.</td>
-			</tr>
--->
-		</TABLE>
-		
+	<BODY>
+	<div id="aaltolunch">
+	<div id="content">
+	<div id="header">
+		<a class="search" href="mainPage.jsp">Back</a>
+	<!-- <a class="search" href="settings.jsp">Friends</a>	 -->
+		<a class="search" href="/aaltolunch/pendingRequests">Pending requests</a>
+		<a class="logout" href="/aaltolunch/logout">Logout</a>
+	</div>
+	<div id="logo"><a href="mainPage.jsp" title="Main page"><img src="images/logo3.png"></a></div>
+	<h3 class="intro">Find friends using AaltoLunch</h3>
 <%
 		// Added on 29 Oct 2010
 		String askFriendshipFname = (String)session.getAttribute("askFriendship.fname");
@@ -106,20 +80,20 @@ import="java.lang.Integer,java.util.List,java.util.ArrayList,org.sizzle.aaltolun
 		
 		// Added on 29 Oct 2010 - end
 %>
-		
-		<FORM name="search" action="search">
+
+        <form name="search" action="search">
 			<TABLE align="center" border="0">
-				<tr><td  style="font-family:Arial;font-size:10pt;color:#2E2E2E">Keyword</td></tr>
+				<tr><td  style="font-family:Verdana, Geneva, Arial, sans-serif;font-size:12px;color:#2E2E2E">Search by name or username:</td></tr>
 				<tr><td>
-						<input type="text" style="color:#00B0F0;font-family:Arial;font-weight:bold;font-size:12px;background-color:#EFF5FB;" size="40" maxlength="20" name="t1" id="t1" >
-						<input type=hidden name=p value="1">
+					<input type="text" class="input-field" size="40" maxlength="20" name="t1" id="t1" >
+					<input type=hidden name=p value="1">
 				</td></tr>
 				<tr><td></td></tr>
 				<tr>
 					<td><input type="submit" name="b1" value="search"></td>
 				</tr>
-			</TABLE>		
-		</FORM>
+			</TABLE>
+        </form>
 <%
 		int PAGE_SIZE = 20;
 		int totalResultSize = 0;
@@ -139,7 +113,7 @@ import="java.lang.Integer,java.util.List,java.util.ArrayList,org.sizzle.aaltolun
 		}
 		
 		// if we have the response
-		List<ASIUserBean> searchResults = (ArrayList<ASIUserBean>) session.getAttribute("search.results");
+		List<ASISearchedUserBean> searchResults = (ArrayList<ASISearchedUserBean>) session.getAttribute("search.results");
 		if (session.getAttribute("size") != null)
 		{
 			totalResultSize = Integer.parseInt((String)session.getAttribute("size"));
@@ -181,14 +155,11 @@ import="java.lang.Integer,java.util.List,java.util.ArrayList,org.sizzle.aaltolun
 			 * int end_index = (start_index + PAGE_SIZE - 1) < (size - 1) ? (start_index + PAGE_SIZE -1) : (size - 1);
 			 */
 %>
-			<BR>
-			<DIV align="center">	
-				<A STYLE="font-family:Arial;font-size:11pt;font-weight:bold;color:#153E7E;">Search result: <%= totalResultSize %> users</A>
-				<BR>
-				<A STYLE="font-family:Arial;font-size:10pt;color:#153E7E">(Click 'Add as friend' for sending friend request)</A>
-			</DIV>
+			<div id="results">	
+            	<h3 class="intro"><%= totalResultSize %> user(s) found.</h3>
+            </div>
 
-			<TABLE align="center" width="270" border=0><tbody>
+			<TABLE align="center" width="290" border=0><tbody>
 <%	
 			
 			for (int i = 0; i < size; i++)
@@ -196,7 +167,10 @@ import="java.lang.Integer,java.util.List,java.util.ArrayList,org.sizzle.aaltolun
 				String avtarLink = "";
 				String userName = "";
 				
-				ASIUserBean user = searchResults.get(i);
+				ASISearchedUserBean aSISearchedUser = searchResults.get(i);
+				ASIUserBean user = aSISearchedUser.getUserBean();
+				FriendshipStatus fstatus = aSISearchedUser.getStatus();
+				System.out.println("user: " + user.getUserNameInfo().getUnstructured() + ", status: " + fstatus.toString());
 
 				if (user.getUserNameInfo() != null)
 				{
@@ -221,15 +195,32 @@ import="java.lang.Integer,java.util.List,java.util.ArrayList,org.sizzle.aaltolun
 				if (userName != null && userName.length() != 0)
 				{
 %>				
-		<!--	<tr style="background: none repeat scroll 0% 0% #F7F8E0;">  -->
-				<tr style="background: none repeat scroll 0% 0% #e8f0fa;">
-					<!-- <td width="80"><img src="<%= ASI_URI + avtarLink %>" /></td>  -->
+				<tr style="background: none repeat scroll 0% 0% white;">
 					<td width="50"><img src="<%= ASI_URI + "people/" + user.getId() + "/@avatar/small_thumbnail/" %>" /></td>
-					<td width="130" VALIGN="top" style="font-family:Arial;font-size:10pt;color:#2E2E2E"><%= userName %></td>
+					<td width="150" VALIGN="top" style="font-family:Arial;font-size:10pt;color:black"><%= userName %></td>
 					
 					<!-- Commented on 29.10.2010  <td width="70" VALIGN="top" align="right"> request </td>  -->
-					
-					<td width="90" VALIGN="top" style="font-family:Arial;font-size:10pt;color:#2E2E2E" align="center"> <a href="/aaltolunch/friendshipRequest?t1=<%= user.getId() %>&t2=<%= userName %>">add as friend</a> </td>
+<% 
+					if (fstatus == ASISearchedUserBean.FriendshipStatus.NOT_A_FRIEND)
+					{
+%>
+						<td width="90" VALIGN="top" style="font-family:Arial;font-size:10pt;color:#2E2E2E" align="center"> <a href="/aaltolunch/friendshipRequest?t1=<%= user.getId() %>&t2=<%= userName %>">add as friend</a> </td>
+<%						
+					}
+					else if (fstatus == ASISearchedUserBean.FriendshipStatus.FRIEND)
+					{
+%>
+						<td width="90" VALIGN="top" style="font-family:Arial;font-size:10pt;color:#2E2E2E" align="center"> your friend </td>
+<%	
+					}
+					else if (fstatus == ASISearchedUserBean.FriendshipStatus.MYSELF)
+					{
+%>
+						<td width="90" VALIGN="top" style="font-family:Arial;font-size:10pt;color:#2E2E2E" align="center"> you </td>
+<%
+					}
+%>					
+
 					
 				</tr>
 <%			
@@ -238,9 +229,9 @@ import="java.lang.Integer,java.util.List,java.util.ArrayList,org.sizzle.aaltolun
 %>		
 			</tbody></TABLE>
 			
-			<TABLE align="center" width="270" border=0><tbody>
+			<TABLE align="center" width="290" border=0><tbody>
 		<!--	<tr style="background: none repeat scroll 0% 0% #dfe4ea;">  -->
-			<tr style="background: none repeat scroll 0% 0% #dfe4ea;">
+			<tr style="background: none repeat scroll 0% 0% white;">
 				<td width="80" VALIGN="top" align="left" STYLE="font-family:Arial;font-size:10pt;font-weight:bold;color:#153E7E"> Page: </td>
 <%
 			for (int j = 1; j <= MAX_INDEX; j++)
@@ -248,7 +239,7 @@ import="java.lang.Integer,java.util.List,java.util.ArrayList,org.sizzle.aaltolun
 				if (j == currentPageNumber)
 				{
 %>			
-					<td width="10" VALIGN="top" align="center"><%= j %></td>
+					<td width="10" VALIGN="top" align="center" STYLE="font-family:Arial;font-size:10pt;color:black"><%= j %></td>
 <%					
 				}
 				else
@@ -272,7 +263,7 @@ import="java.lang.Integer,java.util.List,java.util.ArrayList,org.sizzle.aaltolun
 %>
 				<BR>
 				<DIV align="center">	
-					<A STYLE="font-family:Arial;font-size:11pt;color:#153E7E;">No user matched your search.</A>
+					<A STYLE="font-family:Arial;font-size:11pt;color:#153E7E;">No user found.</A>
 				</DIV>
 <%
 			}
@@ -280,6 +271,18 @@ import="java.lang.Integer,java.util.List,java.util.ArrayList,org.sizzle.aaltolun
 %>		
 		</tbody></TABLE>
 
-		<HR width="100%" color="#0070C0" size="1" />	
+         <div id="footer">
+        	<ul class="footer-nav">
+                <li>&copy; AaltoLunch 2010<li>
+                <li>|</li>
+                <li><a class="footer-links" href="about.html">About us</a></li>
+                <li>|</li>
+                <li><a class="footer-links" href="contact.html">Contact</a></li>
+                <!--<li><a class="footer-links" href="www.shobbie.com/terms">Terms</a></li>-->
+       		</ul>
+        </div>
+        
+    </div>
+    </div>
 	</BODY>
 </HTML>

@@ -30,6 +30,9 @@ public class NewUserServlet extends HttpServlet
 			String uid = sBean.getUserId();
 			String appId = sBean.getAppId();
 			
+			// remove the session attributes (in case those are still existing)
+			session.removeAttribute("uid");
+			
 			session.setAttribute("uid", uid);
 			session.setAttribute("appId", appId);
 			

@@ -9,7 +9,8 @@
 <HTML>
 	<HEAD>
     	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Aalto Lunch service access</title>
+		<title>AaltoLunch - Never eat alone!</title>
+		<link type="text/css" rel="stylesheet" href="aaltolunch.css" />
 		
 		<script type="text/javascript">
 		
@@ -26,60 +27,69 @@
 		</script>
 	</HEAD>
 
-	<BODY bgcolor="white">
-		<H1 align="center"><img src="./images/aalto-lunch-logo-2.png" alt="http://www.aalto.fi"></H1>
-		<!-- <H1 align="center"><img src="./images/aalto-logo-very-small.png" alt="http://www.aalto.fi"><img src="./images/aalto-lunch-logo-blue-small.png" alt="http://www.aalto.fi"></H1> -->
-		<!-- <img src="./images/aalto-logo-stripped.png" alt="http://www.aalto.fi" align="middle" /> -->
-		<!-- <img src="./images/aalto-lunch.png" repeat-x; width: 100%; /> -->
-		<BR>
-<%
-	String loginResult = (String)session.getAttribute("loginResult");
-	session.removeAttribute("loginResult");
-
-	if (loginResult != null && loginResult.equals("failed"))
-	{
-%>
-		<DIV align="center">	
-			<A STYLE="font-family:Arial;font-size:10pt;color:#FF0033">Login failed. </A>
-		</DIV>
-<%
-	}
-	else	
-	{
-%>
-		<DIV align="center">	
-			<A STYLE="font-family:Arial;font-size:10pt;color:#FF0033"></A>
-		</DIV>
-<%
-	}
-%>
-		<H2 align="center" STYLE="font-family:Arial;font-size:10pt;color:#2E2E2E">Login to access to AaltoLunch service</H2>
+	<BODY>
+        <div id="aaltolunch">
+        <div id="content">
+        
+        <!--<div id="header">
+        	<a class="logout" href="newUser.jsp">Sign up</a>
+        </div>-->
+                      
+		<div id="logo"><img src="images/logo3.png"></div>
+		<h3 class="intro">We make sure you don't eat alone!</h3>      
 		
-		<FORM name="access" action="access" method="post">
-			<TABLE align="center">
-				<tr>
-					<!-- <td style="font-family:Arial;font-size:11pt;color:#8A4B08">username</td> -->
-					<td  style="font-family:Arial;font-size:11pt;color:#2E2E2E">username</td>
-					<td><input type="text" style="color:#00B0F0;font-family:Arial;font-weight:bold;font-size:12px;background-color:#EFF5FB;" size="28" maxlength="30" name="t1" ></td>
-				</tr>
-					<td  style="font-family:Arial;font-size:11pt;color:#2E2E2E">password</td>
-					<td><input type="password" style="color:#00B0F0;font-family:Arial;font-weight:bold;font-size:12px;background-color:#EFF5FB;" size="28" maxlength="30" name="t2"></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td><input type="submit" name="b1" value="login"></td>
-				</tr>
-			</TABLE>		
+		<FORM id="login-form" name="access" action="access" method="post">
+   	  	<p class="login-content">
+            	<p class="username-text">Username:</p>
+            	<p class="username-field"><input class="input-field" type="text" style="color: #333" name="t1" /></p>
+       	  		<p class="passwd-text">Password:</p>
+            	<p class="passwd-field"><input class="input-field" type="password" style="color: #333" name="t2" /></p>
+   		  		<p class="input-button"><input class="login-button" value="Login" type="submit" name="b1" />
+<%
+				String loginResult = (String)session.getAttribute("loginResult");
+				session.removeAttribute("loginResult");
+				if (loginResult != null && loginResult.equals("failed"))
+				{
+%>
+					<span class="login-failed">Login failed.</span>
+<%
+				}
+%>
+		</p>
+		<p/>		
 		</FORM>
 		
-		<BR>
-		
-		<DIV align="center">	
-			<A STYLE="font-family:Arial;font-size:11pt;color:#2E2E2E">New user? </A>
-			<A STYLE="font-family:Arial;font-weight:bold;font-size:11pt;color:#00B0F0" href="newUser.jsp">sign-up</A>
-			<A STYLE="font-family:Arial;font-size:11pt;color:#2E2E2E"> here.</A> 
-		</DIV>
-
-		<HR width="100%" color="#0070C0" size="1" />	
+		<div id="signup">
+        	<p class="new-user"><span class="note">Note!</span> You can log in also with OtaSizzle account (Ossi/Kassi account).
+            <p class="new-user">Not a member yet? <span class="sign-up"><a href="newUser.jsp">Sign up!</a></span></p>
+        </div>
+        
+        <br>
+		<FORM name="campus" action="campus.jsp">
+			<TABLE align="center" border=0>
+				<tr>
+					<td><input type="submit" name="c" value="TKK" class="login-button" style="background-color:#FC0;color:#ffffff;height:32px;width:270px"></td>
+				</tr>
+				<tr>
+					<td><input type="submit" name="c" value="HSE" class="login-button" style="background-color:#063;color:#ffffff;height:32px;width:270px"></td>
+				</tr>
+				<tr>
+					<td><input type="submit" name="c" value="TaiK" class="login-button" style="background-color:#E60426;color:#ffffff;height:32px;width:270px"></td>
+				</tr>
+			</TABLE>
+		</FORM>
+        
+        <div id="footer">
+        	<ul class="footer-nav">
+                <li>&copy; AaltoLunch 2010<li>
+                <li>|</li>
+                <li><a class="footer-links" href="about.html">About</a></li>
+                <li>|</li>
+                <li><a class="footer-links" href="contact.html">Contact</a></li>
+                <!--<li><a class="footer-links" href="www.shobbie.com/terms">Terms</a></li>-->
+       		</ul>
+        </div>
+        </div>
+        </div>
 	</BODY>
 </HTML>

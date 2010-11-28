@@ -11,7 +11,8 @@
 <HTML>
 	<HEAD>
     	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"; encoding="ISO-8859-1">
-		<title>Aalto Lunch - all friends page</title>
+		<title>AaltoLunch - Friends</title>
+		<link type="text/css" rel="stylesheet" href="aaltolunch.css" />
 		
 		<script type="text/javascript">
 		
@@ -29,48 +30,49 @@
 		
 	</HEAD>
 
-	<BODY bgcolor="white">
-		<H1 align="center"><img src="./images/aalto-lunch-logo-2.png" alt="http://www.aalto.fi"></H1>
-		<!-- <H1 align="center"><img src="./images/aalto-logo-very-small.png" alt="http://www.aalto.fi"><img src="./images/aalto-lunch-logo-blue-small.png" alt="http://www.aalto.fi"></H1> -->
-		<!-- <img src="./images/aalto-logo-stripped.png" alt="http://www.aalto.fi" align="middle" /> -->
-		<!-- <img src="./images/aalto-lunch.png" repeat-x; width: 100%; /> -->
-		
-		<TABLE width="270" align="center">
-			<tr>
-				<td width="90"><A HREF="javascript:javascript:history.go(-1)">back</A></td>
-				<td width="90"></td>
-		<!-- 	<td width="90" align="right"><A HREF="index.jsp">logout</A></td> 	Commented on 06.11.2010-->
-				<td width="90" align="right"><A HREF="/aaltolunch/logout">logout</A></td>
-		<!--	<td width="90" align="right" style="font-family:Arial;font-size:10pt;color:#153E7E" onclick="window.location.href='index.jsp'">logout</td>		-->
-			</tr>
-		</TABLE>
-		
-<HR width="100%" color="#0070C0" size="1" />
-		<!-- <BR> -->
+	<BODY>
+		<div id="aaltolunch">
+    	<div id="content">
+    	<div id="header">
+    		<a class="search" href="javascript:javascript:history.go(-1)">Back</a>
+            <a class="search" href="settings.jsp">Friends</a>
+            <a class="logout" href="/aaltolunch/logout">Logout</a>
+        </div>
+		<div id="logo"><a href="mainPage.jsp" title="Main page"><img src="images/logo3.png"></a></div>
 <%
 	String ASI_URI = "http://cos.alpha.sizl.org/";
 	String uid = (String)session.getAttribute("uid");
 	// System.out.println("mainPage.jsp: logged in user: " + uid);
+	
+	// Is any user user logged in?
 	if (uid != null)
 	{
 		RestHandler handler = new RestHandler();
 		handler.loginAsApplication();
 		
+		// Fetch the details of the logged in user
 		ASIUserBean loggedInUserDetails = handler.fetchUserDetails(uid);
+		
+		// Fetching the friends of the logged in user
 		List<ASIUserBean> friends = handler.fetchUserFriends(uid);
 		
+		// Find the selections of the users
 		UserSelectionHandler userSelectionHandler = new UserSelectionHandler();
 		userSelectionHandler.init();
 		Properties userSelection = userSelectionHandler.getSelections();
 		// System.out.println("userSelection : " + userSelection);
 		
+		// Name and avtar logged-in user
 		String name = loggedInUserDetails.getUserNameInfo().getUnstructured();
 		String avtarLink = ASI_URI + loggedInUserDetails.getUserAvtarInfo().getUserAvtarLink().getHref();
 		
+		// Place, date and time for the lunch of logged in user
 		String uPlaceToEat = "";
 		String uTimeToEat = "";
 		String uDateToEat = "";
 		String uSubHeader = "";
+		// Count of friends having lunch at the same time
+		int count = 0;
 		
 		if (userSelection != null)
 		{
@@ -103,49 +105,8 @@
 				}				
 			}
 		}
-%>
-		<TABLE align="center" width="270" border=0 bgcolor=#EFF5FB>
-<!--		<tr>
-				<td></td>
-				<td></td>
-				<td align="right" style="font-family:Arial;font-size:10pt;color:#153E7E" onclick="window.location.href='index.jsp'">logout</td>
-			</tr>		
--->
-			<tr>
-				<td width="90"><img src="<%= avtarLink %>" /></td>
-			<!-- <td width="180" style="font-family:Arial;font-size:11pt;font-weight:bold;color:#153E7E" VALIGN="top" ALIGN="right"><%= name + System.getProperty("line.separator") + "@" + uPlaceToEat + " at " + uTimeToEat %></td> -->
-			<!-- <td width="180" style="font-family:Arial;color:#153E7E" VALIGN="top" ALIGN="right"><font size="4"><b><%= name %></b></font><br><font size="2.5"><%= uSubHeader %></font></td>	-->
-			
-				<td width="180" style="font-family:Arial;color:#153E7E" VALIGN="top" ALIGN="right"><font size="4"><b><%= name %></b></font><br><font size="2.5"><%= uSubHeader %></font>
-				
-				<% if (uSubHeader.length() > 0)
-				   {
-				%>
-					<form name="cancelSelForm" action="selection">
-					<input type="hidden" name="cancelSelection" value="yes">
-					<font size="2.5">
-					<A HREF="javascript: submitform()">cancel</A>
-					</font>	
-					</form>
-					<script type="text/javascript">
-						function submitform()
-						{
-						  document.cancelSelForm.submit();
-						}
-					</script>
-				<%
-				   } 
-				%>
-				</td>
-					
-			
-			
-		<!--	<td style="font-family:Arial;font-size:11pt;color:#2E2E2E">Welcome </td>
-				<td style="font-family:Arial;font-size:11pt;font-weight:bold;color:#153E7E"><%= name %></td>
-				<td  width="90"><img src="<%= avtarLink %>" /></td>   -->
-			</tr>
-		</TABLE>
-<%
+		
+		// Get the selection of the friends of logged-in user
 		List<FriendSelection> friendsHavingLunch = new ArrayList<FriendSelection>();
 		if (friends != null && friends.size() > 0)
 		{
@@ -181,6 +142,12 @@
 							placeToEat = placeAndTime;
 						}
 						
+						if ((uPlaceToEat.length() > 0 && uPlaceToEat.equalsIgnoreCase(placeToEat)) 
+								&& (uTimeToEat.length() > 0 && uTimeToEat.equals(timeToEat)))
+						{
+							count++;
+						}
+						
 						String friendName = friend.getUserNameInfo().getUnstructured();
 						// String friendavtarLink = ASI_URI + friend.getUserAvtarInfo().getUserAvtarLink().getHref();
 						String friendavtarLink = ASI_URI + "people/" + friend.getId() + "/@avatar/small_thumbnail/";
@@ -192,8 +159,8 @@
 					}       // closing of (pt != null)
 				}	// closing of (userSelection != null)
 			}	// closing of (ASIUserBean friend : friends)
-		}	// closing of (friends != null && friends.size() > 0)		
-					
+		}	// closing of (friends != null && friends.size() > 0)
+
 		if (friendsHavingLunch.size() > 0)
 		{
 			// sort the list
@@ -201,13 +168,10 @@
 %>			
 			<BR>
 			<DIV align="center">	
-				<A STYLE="font-family:Arial;font-size:11pt;font-weight:bold;color:#153E7E">Complete list of friends' selections</A>
-				<BR>
-				<A STYLE="font-family:Arial;font-size:10pt;color:#153E7E">(Click 'join' for joining your friend)</A>
+				<h3 class="intro">Friends</h3>
 			</DIV>
-			<TABLE align="center" width="270" border=0><tbody>
+			<TABLE align="center" width="290" border=0><tbody>
 <%	
-			int numberToShow = (friendsHavingLunch.size() > 2) ? 2 : friendsHavingLunch.size(); 
 			for (int i = 0; i < friendsHavingLunch.size(); i++)
 			{
 				FriendSelection f = friendsHavingLunch.get(i);
@@ -219,17 +183,50 @@
 					h = tte.substring(0, tte.indexOf(":"));
 					m = tte.substring(tte.indexOf(":") + 1);
 				}
+				
+				boolean match = false;
+				if ((uPlaceToEat.length() > 0 && uPlaceToEat.equalsIgnoreCase(f.getPlaceToEat())) 
+						&& (uTimeToEat.length() > 0 && uTimeToEat.equals(f.getTimeToEat())))
+				{
+					match = true;
+				}
+				
+				if (match)
+				{
 %>				
-				<tr style="background: none repeat scroll 0% 0% #F7F8E0;">
-					<td width="50"><img src="<%= f.getAvtarLink() %>" /></td>
-					<td width="150" VALIGN="top" style="font-family:Arial;font-size:10pt;color:#2E2E2E"><%= f.getName() %><br><%= "@" + f.getPlaceToEat() + " at " + f.getTimeToEat() %></td>
-					<td width="70" VALIGN="top" align="center"> <a href="/aaltolunch/selection?sel=<%= f.getPlaceToEat() %>&hour=<%= h %>&min=<%= m %>">join</a> </td>
+					<tr style="background: none repeat scroll 0% 0% #FFFF66;">
+<%
+				}
+				else
+				{
+%>
+					<tr style="background: none repeat scroll 0% 0% white;">
+<%
+				}
+%>			
+					<td width="50"><img class="friend-avatar" src="<%= f.getAvtarLink() %>" /></td>
+					<td width="170" VALIGN="middle" style="font-size:11px;color:black;padding-left:5px;line-height:150%;"><span style="font-weight: bold"><%= f.getName() %></span><br><%= f.getPlaceToEat() + "@" + f.getTimeToEat() %></td>
+<%
+					if (match)
+					{
+%>
+						<td class="eating-place" width="70" style="color:black;padding-left:5px;font-size:11px;line-height:150%" VALIGN="middle" ALIGN="center"><span>Lunch with you</span></td>
+<%
+					}
+					else
+					{
+%>
+						<td width="70" VALIGN="middle" align="center"> <a href="/aaltolunch/selection?sel=<%= f.getPlaceToEat() %>&hour=<%= h %>&min=<%= m %>">join</a> </td>
+<%					
+					}
+%>
 				</tr>
 <%
 			}	// closing for for loop
 %>
 			</tbody></TABLE>
-<%			
+<%		
+			
 		}      // closing of (friendsHavingLunch.size() > 0)
 		else	
 		{
@@ -241,6 +238,17 @@
 		}
 	}	// closing of (uid != null)
 %>
-		<HR width="100%" color="#0070C0" size="1" />	
+		<div id="footer">
+        	<ul class="footer-nav">
+                <li>&copy; AaltoLunch 2010<li>
+                <li>|</li>
+                <li><a class="footer-links" href="about.html">About us</a></li>
+                <li>|</li>
+                <li><a class="footer-links" href="contact.html">Contact</a></li>
+                <!--<li><a class="footer-links" href="www.shobbie.com/terms">Terms</a></li>-->
+       		</ul>
+        </div>
+    </div>
+    </div>
 	</BODY>
 </HTML>

@@ -11,8 +11,9 @@
 <HTML>
 	<HEAD>
     	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Aalto Lunch - restaurant selection page</title>
-	
+		<title>AaltoLunch - Menus</title>
+		<link type="text/css" rel="stylesheet" href="aaltolunch.css" />
+
 		<script type="text/javascript">
 		function validate_required(field,alerttxt)
 		{
@@ -56,7 +57,7 @@
 		</script>
 	</HEAD>
 
-	<BODY bgcolor="white">
+	<BODY>
 	
 	<script language="JavaScript">
 	<!--
@@ -82,34 +83,47 @@
 	-->
 	</script>
 	
-		<H1 align="center"><img src="./images/aalto-lunch-logo-2.png" alt="http://www.aalto.fi"></H1>
-		<!-- <H1 align="center"><img src="./images/aalto-logo-very-small.png" alt="http://www.aalto.fi"><img src="./images/aalto-lunch-logo-blue-small.png" alt="http://www.aalto.fi"></H1> -->
-		<!-- <img src="./images/aalto-logo-stripped.png" alt="http://www.aalto.fi" align="middle" /> -->
-		<!-- <img src="./images/aalto-lunch.png" repeat-x; width: 100%; /> -->
-		
-		<TABLE width="270" align="center">
-			<tr>
-				<td width="90"><A HREF="javascript:javascript:history.go(-1)">back</A></td>
-				<td width="90"></td>
-		<!-- 	<td width="90" align="right"><A HREF="index.jsp">logout</A></td> 	Commented on 06.11.2010-->
-				<td width="90" align="right"><A HREF="/aaltolunch/logout">logout</A></td>
-		<!--	<td width="90" align="right" style="font-family:Arial;font-size:10pt;color:#153E7E" onclick="window.location.href='index.jsp'">logout</td>		-->
-			</tr>
-		</TABLE>
-		
-<HR width="100%" color="#0070C0" size="1" />
-		<!-- <BR> -->
+        <div id="aaltolunch">
+    	<div id="content">
+		<div id="header">
+<%
+		if (session.getAttribute("uid") != null)
+		{
+%>		
+        	<a class="search" href="mainPage.jsp">Back</a>
+<%
+		}
+		else
+		{
+%>		
+        	<a class="search" href="index.jsp">Back</a>
+<%
+		}
 
+		if (session.getAttribute("uid") != null)
+		{
+%>
+            <a class="logout" href="/aaltolunch/logout">Logout</a>
+<%
+		}
+		else
+		{
+%>
+            <a class="logout" href="newUser.jsp">Signup</a>
+<%
+		}
+%>
+        </div>
+        <div id="logo"><a href="mainPage.jsp" title="Main page"><img src="images/logo3.png"></a></div>
+		
 		<FORM name="selection" action="selection" onsubmit="return validate_form1(this)">  
-		<!-- <FORM name="selection" action="selection">  -->
 
-		<!-- Following table is added on 06.11.2010 -->		
-		<table width="315" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
+		<table width="315" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#C7E9EB">
 		 	<tr><td>&nbsp;</td></tr>
 		 	<tr><td align="center" style="font-family:Arial;font-size:10pt;color:#FF0080"><span id="restSelection"></span></td></tr>
 		 </table>
 		
-		<TABLE align="center"><tbody>
+		<TABLE align="center"  border="0"><tbody>
 <%
 	String campusName = request.getParameter("c"); 
 	boolean dataFound = false;
@@ -128,25 +142,14 @@
 					String campusFullName = sdm.getSchoolName().getFullName();
 					String todayDate = aFormat.format(new Date());
 %>
+		<h3 class="intro">Tell your friends where you eat today!</h3>
 
-		<tr style="background: none repeat scroll 0% 0% rgb(255, 255, 255);">
+		<tr style="background:#C7E9EB;">
 			<td align="center" style="font-family:Arial;font-size:12pt;font-weight:bold;color:#153E7E;height=60px"><%= campusFullName %></td>
-<!--		<td align="right" style="font-family:Arial;font-size:10pt;color:#153E7E;height=30px" onclick="window.location.href='index.jsp'">logout</td>   -->
 		</tr>
-		<tr style="background: none repeat scroll 0% 0% rgb(255, 255, 255);">
-			<td align="left" style="font-family:Arial;font-size:10pt;color:#153E7E;height=60px" width="500">List of restaurants with menus for today, <%= todayDate %>. You can choose your preferred lunch place and time for today. Your selection will be visible to your friends.</td>
+		<tr style="background:#C7E9EB;">
+			<td align="center" style="font-family:Arial;font-size:10pt;color:#000;height=60px" width="500"><%= todayDate %></td>
 		</tr>
-		
-<!--
-					<tr style="background: none repeat scroll 0% 0% rgb(67, 191, 199);">
-						<td style="font-family:Arial;font-size:11pt;font-weight:bold;color:#2E2E2E"><%= campusFullName %></td>
-						<td></td>
-					</tr>
-
-					<DIV align="center">	
-						<A STYLE="font-family:Arial;font-weight:bold;font-size:11pt;color:#00B0F0"><%= campusFullName %></A>
-					</DIV>
--->
 <%					
 					ArrayList<Restaurant> restaurants = sdm.getRestaurants();
 					if (restaurants != null && restaurants.size() > 0)
@@ -155,13 +158,66 @@
 						for (Restaurant r : restaurants)
 						{
 							String rName = r.getName();
+							
+							if (!rName.equalsIgnoreCase("Teekkariravintolat"))
+							{
 %>
 							<tr style="background: none repeat scroll 0% 0% rgb(67, 191, 199);">
-								<td style="font-family:Arial;font-size:10pt;font-weight:bold;color:#2E2E2E"><label for="<%= rName %>"> <input type=RADIO name="sel" value="<%= rName %>" id="<%= rName %>">&nbsp;<%= rName %></label></td>
-								<!--  <td><input type="checkbox" name="sel" value="<%= rName %>"></td>   -->
-								<!--  <td><input type=RADIO name="sel" value="<%= rName %>"></td>      -->
+							<td style="font-family:Arial;font-size:10pt;font-weight:bold;color:#2E2E2E">
+								<label for="<%= rName %>">
+<%
+								if (session.getAttribute("uid") != null)
+								{
+%>
+									<input type=RADIO name="sel" value="<%= rName %>" id="<%= rName %>">
+<%
+								}
+%>
+									<%= rName %>
+								</label>
+							</td>
 							</tr>
 <%	
+							}
+							else
+							{
+								if (session.getAttribute("uid") != null)
+								{
+%>
+							<tr style="background: none repeat scroll 0% 0% rgb(67, 191, 199);">
+								<td style="font-family:Arial;font-size:10pt;font-weight:bold;color:#2E2E2E">Teekkariravintolat</td>
+							</tr>
+							<tr style="background: none repeat scroll 0% 0% #B0E0E6;">
+				<!--
+					 			<td style="font-family:Arial;font-size:10pt;font-weight:bold;color:#2E2E2E"><label for="Dipoli"> <input type=RADIO name="sel" value="Teekkariravintolat:Dipoli" id="Dipoli">&nbsp;Dipoli</label></td>
+								<td style="font-family:Arial;font-size:10pt;font-weight:bold;color:#2E2E2E"><label for="Sähkö"> <input type=RADIO name="sel" value="Teekkariravintolat:Sähkö" id="Sähkö">&nbsp;Sähkö</label></td>
+								<td style="font-family:Arial;font-size:10pt;font-weight:bold;color:#2E2E2E"><label for="Kone"> <input type=RADIO name="sel" value="Teekkariravintolat:Kone" id="Kone">&nbsp;Kone</label></td>
+								<td style="font-family:Arial;font-size:10pt;font-weight:bold;color:#2E2E2E"><label for="Tieto"> <input type=RADIO name="sel" value="Teekkariravintolat:Tieto" id="Tieto">&nbsp;Tieto</label></td>
+								<td style="font-family:Arial;font-size:10pt;font-weight:bold;color:#2E2E2E"><label for="Kasper"> <input type=RADIO name="sel" value="Teekkariravintolat:Kasper" id="Kasper">&nbsp;Kasper</label></td>
+				-->
+					 			<td style="font-family:Arial;font-size:10pt;font-weight:bold;color:#2E2E2E">
+					 				<label for="Dipoli"> <input type=RADIO name="sel" value="Teekkariravintolat-Dipoli" id="Dipoli">&nbsp;Dipoli</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					 				<label for="Sähkö"> <input type=RADIO name="sel" value="Teekkariravintolat-Sähkö" id="Sähkö">&nbsp;Sähkö</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<label for="Kone"> <input type=RADIO name="sel" value="Teekkariravintolat-Kone" id="Kone">&nbsp;Kone</label>
+								</td>
+								</tr>
+								<tr style="background: none repeat scroll 0% 0% #B0E0E6;">
+								<td style="font-family:Arial;font-size:10pt;font-weight:bold;color:#2E2E2E">
+									<label for="Tieto"> <input type=RADIO name="sel" value="Teekkariravintolat-Tieto" id="Tieto">&nbsp;Tieto</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<label for="Kasper"> <input type=RADIO name="sel" value="Teekkariravintolat-Kasper" id="Kasper">&nbsp;Kasper</label>
+								</td>
+							</tr>
+<%								}
+								else
+								{
+%>
+									<tr style="background: none repeat scroll 0% 0% rgb(67, 191, 199);">
+										<td style="font-family:Arial;font-size:10pt;font-weight:bold;color:#2E2E2E">Teekkariravintolat (Dipoli, Sähkö, Kone, Tieto, Kasper)</td>
+									</tr>
+<%
+								}
+							}
+							
 							ArrayList<MenuItem> menuList = r.getMenuList();
 							
 							if (menuList != null && menuList.size() > 0)
@@ -184,8 +240,8 @@
 							else
 							{
 %>
-									<tr style="background: none repeat scroll 0% 0% rgb(239, 245, 251);">
-										<td align="center" style="font-family:Arial;font-size:9pt;color:#2E2E2E">Data unavailable</td>
+									<tr style="background: none repeat scroll 0% 0% #FFF;">
+										<td align="left" style="font-family:Arial;font-size:9pt;color:#2E2E2E">Data unavailable</td>
 										<!-- <td style="font-family:Arial;font-size:10pt;color:#2E2E2E"></td>  -->
 									</tr>
 <%
@@ -201,6 +257,8 @@
 <%
 	if (dataFound)
 	{
+		if (session.getAttribute("uid") != null)
+		{
 %>
 		<BR>
 		<DIV align="center">
@@ -235,11 +293,12 @@
 		<DIV align="center">
 			<TABLE>
 				<tr>
-					<td><input type="submit" name="done" value="Done"></td>
+					<td><input type="submit" name="done" class="login-button" value="Confirm"></td>
 				</tr>
 			</TABLE>
 		</DIV>
 <%
+		}
 	}
 	else
 	{
@@ -256,7 +315,18 @@
 	}
 %>
 		</FORM>
-		<BR>
-		<HR width="100%" color="#0070C0" size="1" />	
+  		<div id="footer">
+        	<ul class="footer-nav">
+                <li>&copy; AaltoLunch 2010<li>
+                <li>|</li>
+                <li><a class="footer-links" href="about.html">About us</a></li>
+                <li>|</li>
+                <li><a class="footer-links" href="contact.html">Contact</a></li>
+                <!--<li><a class="footer-links" href="www.shobbie.com/terms">Terms</a></li>-->
+       		</ul>
+        </div>
+        
+    </DIV>
+    </DIV>
 	</BODY>
 </HTML>

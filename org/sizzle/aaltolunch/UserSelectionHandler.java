@@ -105,6 +105,11 @@ public class UserSelectionHandler
 			selectedRestaurant = "Täffä";
 		}
 		
+		if (selectedRestaurant.startsWith("Teekkariravintolat-S") && selectedRestaurant.contains("hk"))
+		{
+			selectedRestaurant = "Teekkariravintolat-Sähkö";
+		}
+		
 		return selectedRestaurant;
 	}
 
