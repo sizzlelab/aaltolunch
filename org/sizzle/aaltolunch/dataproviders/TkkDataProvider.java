@@ -412,14 +412,14 @@ public class TkkDataProvider
 	private ArrayList<MenuItem> parseSmokki (String menus)
 	{
 		ArrayList<MenuItem> ret = new ArrayList<MenuItem>();
-		menus = menus.replaceAll("<br>","BR_OPEN").replaceAll("\\<[^>]*>","").trim();
+		menus = menus.replaceAll("<br>","~").replaceAll("\\<[^>]*>","").trim();
 
 		if (menus.length() > 0)
 		{
-			menus = menus + "BR_OPEN" + "---";
+			menus = menus + "~" + "---";
 		}
 //		System.out.println((menus));
-		StringTokenizer st = new StringTokenizer(menus, "BR_OPEN");
+		StringTokenizer st = new StringTokenizer(menus, "~");
 		
 		String menuItem = "";
 		while (st.hasMoreTokens())
